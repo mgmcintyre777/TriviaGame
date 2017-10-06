@@ -9,24 +9,21 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://code.jquery.com/jquery.js"></script>
-    <script src="assets/js/trivia.js"></script>
+    <script src="assets/js/trivia_better.js"></script>
   </head>
   <body>
 
   <div class="container trivia-container">
     <div class="jumbotron trivia-jumbotron">
 
+      <div id="title-screen">
+        <h1 class="text-warning">Trivia Game</h1>
+        <button id="start-button" class="btn btn-default btn-lg">Begin</button>
+      </div>
 
-      <h1 class="text-warning">Trivia Game</h1>
+      <div id="loading-screen">Loading ... </div>
 
-      <h4>Question: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id gravida justo. Nullam gravida mattis imperdiet. Curabitur imperdiet arcu in orci fringilla, quis finibus lectus.</h4>
-
-      <ul>
-        <li>Answer 1</li>
-        <li>Answer 1</li>
-        <li>Answer 1</li>
-        <li>Answer 1</li>
-      </ul>
+      <div id="question-screen"></div>      
 
     </div>
   </div>
