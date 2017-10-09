@@ -18,12 +18,31 @@
 
       <div id="title-screen">
         <h1 class="text-warning">Trivia Game</h1>
+        <p>Questions provided by: <a href="https://opentdb.com">Open Trivia Database</a>.<a href="https://opentdb.com"><div id="trivia-logo"></div></a></p>
         <button id="start-button" class="btn btn-default btn-lg">Begin</button>
       </div>
 
       <div id="loading-screen">Loading ... </div>
 
-      <div id="question-screen"></div>      
+      <div id="question-screen">        
+        <p id="question-number" class="lead">Question 1:</p>        
+
+        <p id="question-text" class="h4 mb-3">Text for the questions goes here, it could be longer than this?</p> 
+
+        <button id="answer-1" class="answer-btn btn btn-outline-dark btn-block">Answer</button>
+        <button id="answer-2" class="answer-btn btn btn-default btn-block">Answer</button>
+        <button id="answer-3" class="answer-btn btn btn-default btn-block">Answer</button>
+        <button id="answer-4" class="answer-btn btn btn-default btn-block">Answer</button>
+
+        <div id="timer-area" class="progress mt-4">
+          <div id="timer-bar" class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%; height: 20px"></div>
+        </div>
+
+      </div><!-- End question-screen -->
+
+      <div id="answer-screen">Answer Screen Here ... </div>
+
+      <div id="results-screen">Results Screen Here ... </div>
 
     </div>
   </div>
