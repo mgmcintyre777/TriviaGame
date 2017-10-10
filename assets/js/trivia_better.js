@@ -13,16 +13,21 @@ $(function() {
 		game.setState(1);
 	});
 	$(".answer-btn").on("click", function(e){
-		console.log($(this).attr("correct"));
-		// Answer Logic
-	});
-	
+		timer.clear();
+		if($(this).attr("correct") === "true"){
+			game.answeredCorrectly = true;
+		} else {
+			game.answeredCorrectly = false;
+		}		
+		game.setState(4);
+	});	
 });
 
-var intervalId;
 var apiQuestions;
 
 var game = {
+	answeredCorrectly: false,
+	numCorrect: 0,
 	currentQuestion: 0,
 	state: 0,
 	stateText: [
@@ -47,18 +52,65 @@ var game = {
 	}
 }; // End Game Obj
 
-function changeOfStateHandler(s){
-	if(s === 0){ changeState_TitleScreen(); }
-	else if(s === 1){ changeState_LoadingQuestions(); }
-	else if(s === 2){ changeState_QuestionsLoaded(); }
-	else if(s === 3){ changeState_AskingQuestion(); }
-	else if(s === 4){ changeState_ShowingAnswer(); }
-	else if(s === 5){ changeState_ShowingResults(); }
-	else { changeState_error(); }
+var timer = {
+	initalmiliseconds: 0,
+	miliseconds: 0,
+	tickLength: 1000,
+	intervalId: null,
+	callBackFN: null,
+	setTimer: function(seconds, callBack){
+		console.log("setTimer this:", this);
+		timer.initialmiliseconds = seconds * 1000;
+		timer.miliseconds = timer.initialmiliseconds;
+		timer.callBackFN = callBack;
+		timer.intervalId = setInterval(timer.tick, timer.tickLength);
+		$("#timer-bar").css("width", "100%");
+	},
+	tick: function(){
+		timer.miliseconds -= timer.tickLength;		
+		console.log(timer.miliseconds, pctTimeLeft);
+		if(timer.miliseconds > 0) {
+			var pctTimeLeft = Math.floor(100*((timer.miliseconds-1000)/(timer.initialmiliseconds-1000)));
+			$("#timer-bar").css("width", pctTimeLeft+"%");
+		} else {
+			clearInterval(timer.intervalId);
+			$("#timer-bar").css("width", "0%");			
+			timer.callBackFN();
+		}		
+	},
+	clear: function(){
+		clearInterval(timer.intervalId);
+	}
+};
+
+function changeState_ShowingAnswer(){ //State: 4
+
+	$("#question-screen").hide();
+	if (game.answeredCorrectly === true) game.numCorrect++;
+	game.answeredCorrectly === true ? $("#answer-text").html("You are Correct") : $("#answer-text").html("Nope");
+	$("#answer-screen").show();
+	game.currentQuestion++;
+	timer.setTimer(2, function(){
+		game.currentQuestion === apiQuestions.length ? game.setState(5) : game.setState(3);
+		$("#answer-screen").hide();		
+	});
 }
 
 function changeState_TitleScreen(){ //State: 0
+	game.answeredCorrectly = false;
+	game.numCorrect = 0;
+	game.currentQuestion = 0;
+	$("#results-screen").hide();
+	$("#title-screen").show();
+}
 
+function changeState_ShowingResults(){ //State: 5
+	$("#answer-screen").hide();
+	$("#results-text").html("You got " + game.numCorrect + " of " + apiQuestions.length);
+	$("#results-screen").show();
+	timer.setTimer(3, function(){
+		game.setState(0);		
+	});
 }
 
 function changeState_LoadingQuestions(){ //State: 1
@@ -92,19 +144,33 @@ function changeState_AskingQuestion(){ //State: 3
 			qBtn++;
 		}
 	}
-
 	$("#question-number").html("Question " + (qNum + 1) + ":");
 	$("#question-text").html(apiQuestions[qNum].question);
 	$("#question-screen").show();
+	timer.setTimer(7, function(){
+		console.log("inline");
+		game.answeredCorrectly = false;
+		game.setState(4);
+	});
 }
 
 function getQuestionsFromAPI(){ // AJAX call to Trivia API	
 	$.ajax({
-	  url: "https://opentdb.com/api.php?amount=10&type=multiple",
+	  url: "https://opentdb.com/api.php?amount=3&type=multiple",
 	  method: "GET"
 	}).done(function(response) { 
 		apiQuestions = response.results;
 		console.log(response.results);
 		game.setState(2);
 	});
+}
+
+function changeOfStateHandler(s){
+	if(s === 0){ changeState_TitleScreen(); }
+	else if(s === 1){ changeState_LoadingQuestions(); }
+	else if(s === 2){ changeState_QuestionsLoaded(); }
+	else if(s === 3){ changeState_AskingQuestion(); }
+	else if(s === 4){ changeState_ShowingAnswer(); }
+	else if(s === 5){ changeState_ShowingResults(); }
+	else { changeState_error(); }
 }
