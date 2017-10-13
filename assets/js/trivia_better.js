@@ -45,7 +45,14 @@ var game = {
 		if(this.state !== s){
 			this.state = s;
 			console.log("Entering state:", this.getState());
-			changeOfStateHandler(this.state);
+
+					 if(s === 0){ changeState_TitleScreen();}
+			else if(s === 1){ changeState_LoadingQuestions();}
+			else if(s === 2){ changeState_QuestionsLoaded();}
+			else if(s === 3){ changeState_AskingQuestion();}
+			else if(s === 4){ changeState_ShowingAnswer();}
+			else if(s === 5){ changeState_ShowingResults();}
+
 		} else {
 			console.log("Already in state", s);
 		}
@@ -85,12 +92,20 @@ var timer = {
 
 function changeState_ShowingAnswer(){ //State: 4
 
+	var qNum = game.currentQuestion;
 	$("#question-screen").hide();
-	if (game.answeredCorrectly === true) game.numCorrect++;
-	game.answeredCorrectly === true ? $("#answer-text").html("You are Correct") : $("#answer-text").html("Nope");
+
+	if (game.answeredCorrectly === true) {
+		game.numCorrect++;
+		$("#answer-text").html("You are Correct! " + apiQuestions[qNum].correct_answer);
+	} else {
+		$("#answer-text").html("Nope, it was " + apiQuestions[qNum].correct_answer);
+	}
+
 	$("#answer-screen").show();
-	game.currentQuestion++;
+	
 	timer.setTimer(2, function(){
+		game.currentQuestion++;
 		game.currentQuestion === apiQuestions.length ? game.setState(5) : game.setState(3);
 		$("#answer-screen").hide();		
 	});
