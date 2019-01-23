@@ -162,7 +162,7 @@ function changeState_AskingQuestion(){ //State: 3
 	$("#question-number").html("Question " + (qNum + 1) + ":");
 	$("#question-text").html(apiQuestions[qNum].question);
 	$("#question-screen").show();
-	timer.setTimer(7, function(){
+	timer.setTimer(11, function(){
 		console.log("inline");
 		game.answeredCorrectly = false;
 		game.setState(4);
